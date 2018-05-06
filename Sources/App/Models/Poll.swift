@@ -72,7 +72,7 @@ extension Poll {
 extension Poll: Validatable {
     static func validations() throws -> Validations<Poll> {
         var validations = Validations(Poll.self)
-        try validations.add(\.question, .count (5...25))
+        try validations.add(\.question, .count (5...144))
         return validations
     }
 }
