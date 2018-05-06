@@ -7,6 +7,7 @@
 
 import FluentSQLite
 import Vapor
+import Authentication
 
 /// A single entry of a User list.
 final class User: SQLiteModel {
@@ -28,18 +29,23 @@ final class User: SQLiteModel {
     /// The bonus points for this `User`.
     var points: Int
     
+    /// The hashed password for this `User`.
+    var password: String
+    
     /// Creates a new `User`.
     init(id: Int? = nil,
          email: String,
          username: String,
          age: Int?,
-         phone: String?) {
+         phone: String?,
+         password: String) {
         self.id = id
         self.email = email
         self.username = username
         self.age = age
         self.phone = phone
         self.points = 0
+        self.password = password
     }
 }
 
@@ -56,4 +62,11 @@ extension User {
     var comments: Children<User, PollComment> {
         return children(\.userID)
     }
+}
+
+extension User: TokenAuthenticatable, BasicAuthenticatable {
+    public typealias TokenType = TerraToken
+    
+    public static var usernameKey : WritableKeyPath<User, String> = \User.email
+    public static var passwordKey : WritableKeyPath<User, String> = \User.password
 }

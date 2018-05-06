@@ -8,13 +8,7 @@
 import Vapor
 
 /// Controlers basic CRUD operations on `Poll`s.
-final class PollController {
-    /// Returns a list of all `Poll`s.
-    //    func index(_ req: Request) throws -> Future<[Poll]> {
-    //        return Poll.query(on: req).all()
-    //    }
-    
-    
+final class PollController {    
     func index(_ req: Request) throws -> Future<[PollContext]> {
         return Poll.query(on: req).all().flatMap(to: [PollContext].self) { polls in
             let promise = req.eventLoop.newPromise([PollContext].self)
@@ -39,6 +33,10 @@ final class PollController {
         let answers = req.content.get([PollAnswer].self, at: "options")
         
         return flatMap(to: HTTPResponse.self, poll, answers) { (savedPoll, children) in
+            try savedPoll.validate()
+            for child in children {
+                try child.validate()
+            }
             return savedPoll.answers.attach(on: req, children, parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
         }
     }
@@ -50,9 +48,21 @@ final class PollController {
             }.transform(to: .ok)
     }
     
-    func getAnswers(_ req: Request) throws -> Future<[PollAnswer]> {
-        return try req.parameters.next(Poll.self).flatMap(to: [PollAnswer].self) { poll in
-            return try poll.answers.query(on: req).all()
+    //MARK: Comments
+    
+    /// Adds a `PollComment` to a `Poll`
+    func createComment(_ req: Request) throws -> Future<HTTPResponse> {
+        return try req.parameters.next(Poll.self).flatMap { poll in
+            return try req.content.decode(PollComment.self).flatMap { comment in
+                return poll.comments.attach(on: req, [comment], parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
+            }
+        }
+    }
+    
+    /// Gets all `PollComment`s from a `Poll`
+    func indexComment(_ req: Request) throws -> Future<[PollComment]> {
+        return try req.parameters.next(Poll.self).flatMap { poll in
+            return try poll.comments.query(on: req).all()
         }
     }
 }

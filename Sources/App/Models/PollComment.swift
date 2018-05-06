@@ -14,7 +14,7 @@ final class PollComment: SQLiteModel {
     var id: Int?
     
     /// The unique identifier for the parent `Poll`
-    var pollID: Poll.ID
+    var pollID: Poll.ID?
     
     /// The unique identifier for the parent `User`
     var userID: User.ID
@@ -41,11 +41,11 @@ extension PollComment: Content { }
 extension PollComment: Parameter { }
 
 extension PollComment {
-    var poll: Parent<PollComment, Poll> {
-        return parent(\.pollID)
-    }
-    
-    var user: Parent<PollComment, User> {
-        return parent(\.userID)
-    }
+//    var poll: Parent<PollComment, Poll> {
+//        return parent(\.pollID)
+//    }
+//
+//    var user: Parent<PollComment, User> {
+//        return parent(\.userID)
+//    }
 }

@@ -34,3 +34,11 @@ extension PollAnswer: Content { }
 
 /// Allows `PollAnswer` to be used as a dynamic parameter in route definitions.
 extension PollAnswer: Parameter { }
+
+extension PollAnswer: Validatable {
+    static func validations() throws -> Validations<PollAnswer> {
+        var validations = Validations(PollAnswer.self)
+        try validations.add(\.option, .count (2...10))
+        return validations
+    }
+}

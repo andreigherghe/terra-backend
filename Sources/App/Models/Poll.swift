@@ -17,7 +17,7 @@ final class Poll: SQLiteModel {
     var question: String
     
     /// The start date of the `Poll`.
-    var startDate: Double
+    var startDate: Double?
     
     // The end date of the `Poll`.
     var endDate: Double
@@ -26,31 +26,27 @@ final class Poll: SQLiteModel {
     var showResultsDate: Double?
     
     // If the results are to be displayed immediately after voting in the `Poll`.
-    var showResultsImmediately: Bool?
+    var showResultsImmediately: Int?
     
     // If comments are allowed in the `Poll`.
-    var allowComments: Bool?
+    var disableComments: Int?
     
     /// Creates a new `Poll`.
     init?(id: Int? = nil,
          question: String,
-         start_date: Double?,
-         end_date: Double,
-         show_results_date: Double?,
-         show_results_immediately: Bool?,
-         allow_comments: Bool?) {
+         startDate: Double?,
+         endDate: Double,
+         showResultsDate: Double?,
+         showResultsImmediately: Int?,
+         disableComments: Int?) {
         
-        if (show_results_immediately == true && show_results_date != nil) {
-            return nil
-        }
-                
         self.id = id
         self.question = question
-        self.startDate = start_date ?? Date().timeIntervalSince1970
-        self.endDate = end_date
-        self.showResultsDate = show_results_date ?? end_date
-        self.showResultsImmediately = show_results_immediately ?? false
-        self.allowComments = allow_comments ?? true
+        self.startDate = startDate
+        self.endDate = endDate
+        self.showResultsDate = showResultsDate
+        self.showResultsImmediately = showResultsImmediately
+        self.disableComments = disableComments
     }
 }
 
@@ -70,5 +66,13 @@ extension Poll {
 
     var answers: Children<Poll, PollAnswer> {
         return children(\.pollID)
+    }
+}
+
+extension Poll: Validatable {
+    static func validations() throws -> Validations<Poll> {
+        var validations = Validations(Poll.self)
+        try validations.add(\.question, .count (5...25))
+        return validations
     }
 }
