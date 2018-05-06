@@ -1,0 +1,16 @@
+version: "Apple Swift version 4.1.1 (swiftlang-902.0.50 clang-902.0.37.1)"
+options: "b56c605349b4932444d1af8b9520b0be"
+build_time: [1525527824, 699737000]
+inputs:
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/BitsError.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/Byte+Alphabet.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/Byte+Control.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/Byte+Digit.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/ByteBuffer+binaryFloatingPointOperations.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/ByteBuffer+peek.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/ByteBuffer+require.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/ByteBuffer+string.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/Bytes.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/Data+Bytes.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/Data+Strings.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Bits/Deprecated.swift": [9223372036, 854775807]

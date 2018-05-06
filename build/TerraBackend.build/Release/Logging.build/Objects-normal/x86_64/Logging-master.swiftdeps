@@ -1,0 +1,8 @@
+version: "Apple Swift version 4.1.1 (swiftlang-902.0.50 clang-902.0.37.1)"
+options: "564a2dfa90ac81c188b8d01acd15f010"
+build_time: [1525527923, 988303000]
+inputs:
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/console.git--2431895819212044213/Sources/Logging/Exports.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/console.git--2431895819212044213/Sources/Logging/LogLevel.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/console.git--2431895819212044213/Sources/Logging/Logger.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/console.git--2431895819212044213/Sources/Logging/PrintLogger.swift": [9223372036, 854775807]

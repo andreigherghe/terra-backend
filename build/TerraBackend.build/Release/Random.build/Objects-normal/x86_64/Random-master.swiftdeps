@@ -1,0 +1,8 @@
+version: "Apple Swift version 4.1.1 (swiftlang-902.0.50 clang-902.0.37.1)"
+options: "ba0839242e0f40681847a7a0016bd821"
+build_time: [1525527916, 905353000]
+inputs:
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/crypto.git-7980259129511365902/Sources/Random/Array+Random.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/crypto.git-7980259129511365902/Sources/Random/OSRandom.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/crypto.git-7980259129511365902/Sources/Random/RandomProtocol.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/crypto.git-7980259129511365902/Sources/Random/URandom.swift": [9223372036, 854775807]

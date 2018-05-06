@@ -1,0 +1,20 @@
+version: "Apple Swift version 4.1.1 (swiftlang-902.0.50 clang-902.0.37.1)"
+options: "996ce4e7fcd1d872156942f014c22044"
+build_time: [1525527871, 842727000]
+inputs:
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Exports.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validatable.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/ValidationError.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validations.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validator.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/ValidatorType.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validators/AndValidator.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validators/CharacterSetValidator.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validators/CountValidator.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validators/EmailValidator.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validators/InValidator.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validators/NilIgnoringValidator.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validators/NilValidator.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validators/NotValidator.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validators/OrValidator.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/validation.git--4403154650041669468/Sources/Validation/Validators/RangeValidator.swift": [9223372036, 854775807]

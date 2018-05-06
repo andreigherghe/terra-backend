@@ -1,0 +1,6 @@
+version: "Apple Swift version 4.1.1 (swiftlang-902.0.50 clang-902.0.37.1)"
+options: "068456159f2ad4a5a38893c7c96431ec"
+build_time: [1525527750, 798137000]
+inputs:
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/swift-nio.git-3108475404973543938/Sources/NIOPriorityQueue/Heap.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/swift-nio.git-3108475404973543938/Sources/NIOPriorityQueue/PriorityQueue.swift": [9223372036, 854775807]

@@ -1,0 +1,12 @@
+version: "Apple Swift version 4.1.1 (swiftlang-902.0.50 clang-902.0.37.1)"
+options: "366ce602c2573cbddebfb9b1bfc9869a"
+build_time: [1525527874, 969189000]
+inputs:
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/url-encoded-form.git--8133570518800567758/Sources/URLEncodedForm/Codable/URLEncodedFormDecoder.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/url-encoded-form.git--8133570518800567758/Sources/URLEncodedForm/Codable/URLEncodedFormEncoder.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/url-encoded-form.git--8133570518800567758/Sources/URLEncodedForm/Data/URLEncodedFormData.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/url-encoded-form.git--8133570518800567758/Sources/URLEncodedForm/Data/URLEncodedFormDataConvertible.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/url-encoded-form.git--8133570518800567758/Sources/URLEncodedForm/Data/URLEncodedFormParser.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/url-encoded-form.git--8133570518800567758/Sources/URLEncodedForm/Data/URLEncodedFormSerializer.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/url-encoded-form.git--8133570518800567758/Sources/URLEncodedForm/Utilities/Exports.swift": [9223372036, 854775807]
+  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/url-encoded-form.git--8133570518800567758/Sources/URLEncodedForm/Utilities/URLEncodedFormError.swift": [9223372036, 854775807]
