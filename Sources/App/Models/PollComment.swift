@@ -41,11 +41,12 @@ extension PollComment: Content { }
 extension PollComment: Parameter { }
 
 extension PollComment {
+    // TODO: fix this
 //    var poll: Parent<PollComment, Poll> {
 //        return parent(\.pollID)
 //    }
-//
-//    var user: Parent<PollComment, User> {
-//        return parent(\.userID)
-//    }
+
+    var user: Parent<PollComment, User> {
+        return parent(\.userID)
+    }
 }

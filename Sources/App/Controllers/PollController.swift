@@ -6,6 +6,7 @@
 //
 
 import Vapor
+import Fluent
 
 /// Controlers basic CRUD operations on `Poll`s.
 final class PollController {    
@@ -15,7 +16,7 @@ func index(_ req: Request) throws -> Future<[PollContext]> {
         DispatchQueue.global().async {
             do {
                 let pollMap = try polls.compactMap { poll -> PollContext? in
-                    return try PollContext(poll: poll, options: poll.answers.query(on: req).all().wait())
+                    return try PollContext(poll: poll, options: poll.options.query(on: req).all().wait())
                 }
                 promise.succeed(result: pollMap)
             }
@@ -37,7 +38,7 @@ func index(_ req: Request) throws -> Future<[PollContext]> {
             for child in children {
                 try child.validate()
             }
-            return savedPoll.answers.attach(on: req, children, parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
+            return savedPoll.options.attach(on: req, children, parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
         }
     }
     
@@ -67,6 +68,35 @@ func index(_ req: Request) throws -> Future<[PollContext]> {
     func indexComment(_ req: Request) throws -> Future<[PollComment]> {
         return try req.parameters.next(Poll.self).flatMap { poll in
             return try poll.comments.query(on: req).all()
+        }
+    }
+
+    //MARK: Votes
+
+    func votePoll(_ req: Request) throws -> Future<HTTPResponse> {
+        return try req.parameters.next(Poll.self).flatMap { poll in
+            return try req.parameters.next(PollAnswer.self).flatMap { option in
+                guard let userID = try req.user().id else {
+                    throw(Abort.init(.badRequest))
+                }
+                guard let pollID = poll.id else {
+                    throw(Abort.init(.badRequest))
+                }
+                guard let optionID = option.id else {
+                    throw(Abort.init(.badRequest))
+                }
+
+                return try PollAnswer.query(on: req).filter(\PollAnswer.id == optionID).filter(\PollAnswer.pollID == pollID).count().flatMap { answerCount -> Future<HTTPResponse> in
+                    if (answerCount == 0) {
+                        throw Abort(.badRequest)
+                    }
+                    if (answerCount != 1) {
+                        throw Abort(.internalServerError)
+                    }
+                    let pollVote = PollVote(pollID: pollID, optionID: optionID, userID: userID)
+                    return poll.votes.attach(on: req, [pollVote], parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
+                }
+            }
         }
     }
 }

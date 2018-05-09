@@ -64,7 +64,11 @@ extension Poll {
         return children(\.pollID)
     }
 
-    var answers: Children<Poll, PollAnswer> {
+    var options: Children<Poll, PollAnswer> {
+        return children(\.pollID)
+    }
+
+    var votes: Children<Poll, PollVote> {
         return children(\.pollID)
     }
 }

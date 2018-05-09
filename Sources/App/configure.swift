@@ -31,6 +31,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     migrations.add(model: Poll.self, database: .sqlite)
     migrations.add(model: PollAnswer.self, database: .sqlite)
     migrations.add(model: PollComment.self, database: .sqlite)
+    migrations.add(model: PollVote.self, database: .sqlite)
     migrations.add(model: TerraToken.self, database: .sqlite)
     migrations.add(model: User.self, database: .sqlite)
     services.register(migrations)
