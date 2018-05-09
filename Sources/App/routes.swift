@@ -13,20 +13,15 @@ public func routes(_ router: Router) throws {
     // Configure Poll Controller
     let pollController = PollController()
     router.get("polls", use: pollController.index)
-    router.post("polls", use: pollController.create)
-    router.delete("polls", Poll.parameter, use: pollController.delete)
+    tokenAuthedGroup.post("polls", use: pollController.create)
+    tokenAuthedGroup.delete("polls", Poll.parameter, use: pollController.delete)
     
     // Poll Comments
-    router.get("polls", Poll.parameter, "comments", use: pollController.indexComment)
-    router.post("polls", Poll.parameter, "comments", use: pollController.createComment)
+    tokenAuthedGroup.get("polls", Poll.parameter, "comments", use: pollController.indexComment)
+    tokenAuthedGroup.post("polls", Poll.parameter, "comments", use: pollController.createComment)
     
     // Configure User Controller
-//    let userController = UserController()
-    router.post("login") { req -> Future<TerraToken> in
-        //        let promise = req.eventLoop.newPromise([TerraToken].self)
-        //        DispatchQueue.global().async {
-        let user = try req.user()
-        let token = try TerraToken.generate(for: user)
-        return token.save(on: req)
-    }
+    let userController = UserController()
+    passwordAuthedGroup.post("login", use: userController.login)
+    router.post("signup", use: userController.signup)
 }

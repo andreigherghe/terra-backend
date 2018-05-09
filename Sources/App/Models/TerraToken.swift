@@ -14,12 +14,12 @@ import Crypto
 final class TerraToken: SQLiteModel {
     var id: Int?
     
-    var string: String
+    var token: String
     var userID: Int
     
     init(id: Int? = nil, string: String, user: User) throws {
         self.id = id
-        self.string = string
+        self.token = string
         guard let loggedUserId = user.id else {
             throw Abort.init(.badRequest)
         }
@@ -43,7 +43,7 @@ extension TerraToken: Token {
     }
     
     static var tokenKey: WritableKeyPath<TerraToken, String> {
-        return \TerraToken.string
+        return \TerraToken.token
     }
     
     typealias UserType = User

@@ -9,23 +9,23 @@ import Vapor
 
 /// Controlers basic CRUD operations on `Poll`s.
 final class PollController {    
-    func index(_ req: Request) throws -> Future<[PollContext]> {
-        return Poll.query(on: req).all().flatMap(to: [PollContext].self) { polls in
-            let promise = req.eventLoop.newPromise([PollContext].self)
-            DispatchQueue.global().async {
-                do {
-                    let pollMap = try polls.compactMap { poll -> PollContext? in
-                        return try PollContext(poll: poll, options: poll.answers.query(on: req).all().wait())
-                    }
-                    promise.succeed(result: pollMap)
+func index(_ req: Request) throws -> Future<[PollContext]> {
+    return Poll.query(on: req).all().flatMap(to: [PollContext].self) { polls in
+        let promise = req.eventLoop.newPromise([PollContext].self)
+        DispatchQueue.global().async {
+            do {
+                let pollMap = try polls.compactMap { poll -> PollContext? in
+                    return try PollContext(poll: poll, options: poll.answers.query(on: req).all().wait())
                 }
-                catch {
-                    promise.fail(error: error)
-                }
+                promise.succeed(result: pollMap)
             }
-            return promise.futureResult
+            catch {
+                promise.fail(error: error)
+            }
         }
+        return promise.futureResult
     }
+}
     
     /// Saves a decoded `Poll` to the database.
     func create(_ req: Request) throws -> Future<HTTPResponse> {
@@ -54,6 +54,10 @@ final class PollController {
     func createComment(_ req: Request) throws -> Future<HTTPResponse> {
         return try req.parameters.next(Poll.self).flatMap { poll in
             return try req.content.decode(PollComment.self).flatMap { comment in
+                guard let userID = try req.user().id else {
+                    throw(Abort.init(.badRequest))
+                }
+                comment.userID = userID
                 return poll.comments.attach(on: req, [comment], parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
             }
         }

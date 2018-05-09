@@ -10,6 +10,14 @@ import Vapor
 import Authentication
 
 /// A single entry of a User list.
+
+public enum Authorization: Int, Codable {
+    case guest
+    case user
+    case partner
+    case owner
+}
+
 final class User: SQLiteModel {
     /// The unique identifier for this `User`.
     var id: Int?
@@ -18,7 +26,7 @@ final class User: SQLiteModel {
     var email: String
     
     /// The username for this `User`.
-    var username: String
+    var username: String?
     
     /// The age for this `User`.
     var age: Int?
@@ -27,18 +35,23 @@ final class User: SQLiteModel {
     var phone: String?
     
     /// The bonus points for this `User`.
-    var points: Int
+    var points: Int?
     
     /// The hashed password for this `User`.
     var password: String
-    
+
+    /// Auth level for the `User`
+//    var authorization: Authorization?
+
     /// Creates a new `User`.
     init(id: Int? = nil,
          email: String,
-         username: String,
+         username: String?,
          age: Int?,
          phone: String?,
-         password: String) {
+         password: String
+//         authorization: Authorization?
+        ) {
         self.id = id
         self.email = email
         self.username = username
@@ -46,7 +59,13 @@ final class User: SQLiteModel {
         self.phone = phone
         self.points = 0
         self.password = password
+//        self.authorization = authorization
     }
+}
+
+struct LoggedUserResponse: Content {
+    let username: String
+    let token: String
 }
 
 /// Allows `User` to be used as a dynamic migration.

@@ -6,13 +6,35 @@
 //
 
 import Vapor
+import Crypto
+import Fluent
 
 /// Controlers basic CRUD operations on `User`s.
+
+//thanks @bensyverson
 final class UserController {    
     /// Saves a decoded `User` to the database.
-    func create(_ req: Request) throws -> Future<User> {
-        return try req.content.decode(User.self).flatMap { todo in
-            return todo.save(on: req)
+    func signup(_ req: Request) throws -> Future<HTTPResponse> {
+        return try req.content.decode(User.self).flatMap { user in
+            try User.query(on: req).filter(\User.email == user.email).count().flatMap { userCount in
+                if userCount > 0 {
+                    throw Abort(.conflict)
+                }
+                else {
+                    user.password = try BCrypt.hash(user.password, cost: 4)
+                    return user.save(on: req).transform(to: HTTPResponse(status: .created))
+                }
+            }
+        }
+    }
+
+    func login(_ req: Request) throws -> Future<LoggedUserResponse> {
+        let user = try req.user()
+        let token = try TerraToken.generate(for: user)
+        return token.save(on: req).flatMap { savedToken -> Future<LoggedUserResponse> in
+            return Future.map(on: req) {
+                return LoggedUserResponse(username: user.email, token: savedToken.token)
+            }
         }
     }
     
