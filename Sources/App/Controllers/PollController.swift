@@ -86,7 +86,8 @@ func index(_ req: Request) throws -> Future<[PollContext]> {
                     throw(Abort.init(.badRequest))
                 }
 
-                return try PollAnswer.query(on: req).filter(\PollAnswer.id == optionID).filter(\PollAnswer.pollID == pollID).count().flatMap { answerCount -> Future<HTTPResponse> in
+
+                return try poll.options.query(on: req).filter(\PollAnswer.id == optionID).count().flatMap { answerCount -> Future<HTTPResponse> in
                     if (answerCount == 0) {
                         // TODO: add reason
                         throw Abort(.badRequest)

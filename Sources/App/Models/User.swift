@@ -81,6 +81,8 @@ extension User {
     var comments: Children<User, PollComment> {
         return children(\.userID)
     }
+
+    //TODO: ADD POLL VOTE CHILDREN
 }
 
 extension User: TokenAuthenticatable, BasicAuthenticatable {
