@@ -88,13 +88,20 @@ func index(_ req: Request) throws -> Future<[PollContext]> {
 
                 return try PollAnswer.query(on: req).filter(\PollAnswer.id == optionID).filter(\PollAnswer.pollID == pollID).count().flatMap { answerCount -> Future<HTTPResponse> in
                     if (answerCount == 0) {
+                        // TODO: add reason
                         throw Abort(.badRequest)
                     }
                     if (answerCount != 1) {
                         throw Abort(.internalServerError)
                     }
-                    let pollVote = PollVote(pollID: pollID, optionID: optionID, userID: userID)
-                    return poll.votes.attach(on: req, [pollVote], parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
+                    return try PollVote.query(on: req).filter(\PollVote.pollID == pollID).filter(\PollVote.userID == userID).count().flatMap() { votedCount -> Future<HTTPResponse> in
+                        if (votedCount > 0) {
+                            throw Abort(.conflict)
+                        }
+                        
+                        let pollVote = PollVote(pollID: pollID, optionID: optionID, userID: userID)
+                        return poll.votes.attach(on: req, [pollVote], parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
+                    }
                 }
             }
         }
