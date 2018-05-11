@@ -24,5 +24,6 @@ public func routes(_ router: Router) throws {
     // Configure User Controller
     let userController = UserController()
     passwordAuthedGroup.post("login", use: userController.login)
+    tokenAuthedGroup.get("self", use: userController.getSelf)
     router.post("signup", use: userController.signup)
 }

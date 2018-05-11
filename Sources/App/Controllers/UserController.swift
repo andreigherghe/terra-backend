@@ -37,6 +37,14 @@ final class UserController {
             }
         }
     }
+
+    /// Deletes a parameterized `User`.
+    func getSelf(_ req: Request) throws -> Future<LoggedUserResponse> {
+        let user = try req.user()
+        return Future.map(on: req) {
+            return LoggedUserResponse(username: user.email, token: nil)
+        }
+    }
     
     /// Deletes a parameterized `User`.
     func delete(_ req: Request) throws -> Future<HTTPStatus> {

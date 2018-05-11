@@ -10,23 +10,23 @@ import Fluent
 
 /// Controlers basic CRUD operations on `Poll`s.
 final class PollController {    
-func index(_ req: Request) throws -> Future<[PollContext]> {
-    return Poll.query(on: req).all().flatMap(to: [PollContext].self) { polls in
-        let promise = req.eventLoop.newPromise([PollContext].self)
-        DispatchQueue.global().async {
-            do {
-                let pollMap = try polls.compactMap { poll -> PollContext? in
-                    return try PollContext(poll: poll, options: poll.options.query(on: req).all().wait())
+    func index(_ req: Request) throws -> Future<[PollContext]> {
+        return Poll.query(on: req).all().flatMap(to: [PollContext].self) { polls in
+            let promise = req.eventLoop.newPromise([PollContext].self)
+            DispatchQueue.global().async {
+                do {
+                    let pollMap = try polls.compactMap { poll -> PollContext? in
+                        return try PollContext(poll: poll, options: poll.options.query(on: req).all().wait())
+                    }
+                    promise.succeed(result: pollMap)
                 }
-                promise.succeed(result: pollMap)
+                catch {
+                    promise.fail(error: error)
+                }
             }
-            catch {
-                promise.fail(error: error)
-            }
+            return promise.futureResult
         }
-        return promise.futureResult
     }
-}
     
     /// Saves a decoded `Poll` to the database.
     func create(_ req: Request) throws -> Future<HTTPResponse> {
@@ -85,7 +85,6 @@ func index(_ req: Request) throws -> Future<[PollContext]> {
                 guard let optionID = option.id else {
                     throw(Abort.init(.badRequest))
                 }
-
 
                 return try poll.options.query(on: req).filter(\PollAnswer.id == optionID).count().flatMap { answerCount -> Future<HTTPResponse> in
                     if (answerCount == 0) {

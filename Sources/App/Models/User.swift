@@ -65,7 +65,7 @@ final class User: SQLiteModel {
 
 struct LoggedUserResponse: Content {
     let username: String
-    let token: String
+    let token: String?
 }
 
 /// Allows `User` to be used as a dynamic migration.
