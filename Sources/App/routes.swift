@@ -10,10 +10,13 @@ public func routes(_ router: Router) throws {
 
     let tokenMiddleware = User.tokenAuthMiddleware(database: .sqlite)
     let tokenAuthedGroup = router.grouped(tokenMiddleware)
+
+    let optionalTokenMiddleware = User.nonThrowingTokenAuthMiddleware(database: .sqlite)
+    let optionalTokenAuthedGroup = router.grouped(optionalTokenMiddleware)
     
     // Configure Poll Controller
     let pollController = PollController()
-    router.get("polls", use: pollController.index)
+    optionalTokenAuthedGroup.get("polls", use: pollController.index)
     router.post("polls", use: pollController.create) // AUTH
     router.get("polls", "delete", Poll.parameter, use: pollController.delete) // AUTH
     
