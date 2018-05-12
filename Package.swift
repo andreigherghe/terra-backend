@@ -11,11 +11,14 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent-sqlite.git", from: "3.0.0-rc.2"),
         
         // 👤 Authentication and Authorization layer for Fluent.
-        .package(url: "https://github.com/vapor/auth.git", from: "2.0.0-rc.3.1")
+        .package(url: "https://github.com/vapor/auth.git", from: "2.0.0-rc.3.1"),
+
+        // 🍃 An expressive, performant, and extensible templating language built for Swift.
+        .package(url: "https://github.com/vapor/leaf.git", from: "3.0.0-rc.2")
 
     ],
     targets: [
-        .target(name: "App", dependencies: ["FluentSQLite", "Vapor", "Authentication"]),
+        .target(name: "App", dependencies: ["FluentSQLite", "Vapor", "Authentication", "Leaf"]),
         .target(name: "Run", dependencies: ["App"]),
         .testTarget(name: "AppTests", dependencies: ["App"])
     ]

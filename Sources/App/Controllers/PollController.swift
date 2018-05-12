@@ -11,6 +11,7 @@ import Fluent
 /// Controlers basic CRUD operations on `Poll`s.
 final class PollController {    
     func index(_ req: Request) throws -> Future<[PollContext]> {
+        //TODO: refactor without promise
         return Poll.query(on: req).all().flatMap(to: [PollContext].self) { polls in
             let promise = req.eventLoop.newPromise([PollContext].self)
             DispatchQueue.global().async {
@@ -29,24 +30,48 @@ final class PollController {
     }
     
     /// Saves a decoded `Poll` to the database.
-    func create(_ req: Request) throws -> Future<HTTPResponse> {
+    func create(_ req: Request) throws -> Future<Response> {
         let poll = req.content.get(Poll.self, at: "poll")
-        let answers = req.content.get([PollAnswer].self, at: "options")
+        let answerArray = req.content.get([String].self, at: "options")
+
+        let answers = answerArray.flatMap { answerMap -> Future<[PollAnswer]> in
+            Future.map(on:req) {
+                answerMap.compactMap { answer in
+                    if (answer.isEmpty) {
+                        return nil
+                    }
+                    return PollAnswer(option: answer)
+                }
+            }
+        }
         
-        return flatMap(to: HTTPResponse.self, poll, answers) { (savedPoll, children) in
+        return flatMap(to: Response.self, poll, answers) { (savedPoll, children) in
+            //TODO: use parameters instead of hardcoded urls
+            if (children.count < 2){
+                return Future.map(on: req) {req.redirect(to: "/?createPollSuccess=false")}
+            }
             try savedPoll.validate()
             for child in children {
                 try child.validate()
             }
-            return savedPoll.options.attach(on: req, children, parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
+            return savedPoll.options.attach(on: req, children, parentIdKeyPath: \.pollID).map(to: Response.self) { _ in
+                return req.redirect(to: "/?createPollSuccess=true")
+            }
         }
     }
     
     /// Deletes a parameterized `Poll`.
-    func delete(_ req: Request) throws -> Future<HTTPStatus> {
-        return try req.parameters.next(Poll.self).flatMap { Poll in
-            return Poll.delete(on: req)
-            }.transform(to: .ok)
+    func delete(_ req: Request) throws -> Future<Response> {
+        return try req.parameters.next(Poll.self).flatMap { poll -> Future<Response> in
+            let deletePoll = poll.delete(on: req)
+            let deleteOptions = try poll.options.query(on: req).delete()
+            let deleteComments = try poll.comments.query(on: req).delete()
+            let deleteVotes = try poll.votes.query(on: req).delete()
+            return flatMap(to: Response.self, deleteComments, deleteOptions, deleteVotes, deletePoll) {
+                (_, _, _, _) in
+                return Future.map(on: req) {req.redirect(to: "/")}
+            }
+        }
     }
     
     //MARK: Comments

@@ -1,6 +1,7 @@
 import FluentSQLite
 import Vapor
 import Authentication
+import Leaf
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
@@ -14,7 +15,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     /// Register middleware
     var middlewares = MiddlewareConfig() // Create _empty_ middleware config
-    /// middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
+    middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     services.register(middlewares)
 
@@ -38,6 +39,9 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     
     /// Auth
     try services.register(AuthenticationProvider())
+
+    /// Leaf
+    try services.register(LeafProvider())
 }
 extension Collection where Element: Model, Element.Database: QuerySupporting {
     func save(on conn: DatabaseConnectable) -> Future<[Element]> {
