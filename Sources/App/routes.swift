@@ -39,7 +39,7 @@ public func routes(_ router: Router) throws {
             DispatchQueue.global().async {
                 do {
                     let pollMap = try polls.compactMap { poll -> PollContext? in
-                        return try PollContext(poll: poll, options: poll.options.query(on: req).all().wait())
+                        return try PollContext(poll: poll, options: poll.options.query(on: req).all().wait(), votedID: nil)
                     }
                     let homeParams = try req.query.decode(HomeParams.self)
                     let context = HomeContext(polls: pollMap, params: homeParams)

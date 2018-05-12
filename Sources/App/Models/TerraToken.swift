@@ -50,8 +50,8 @@ extension TerraToken: Token {
 }
 
 extension Request {
-    func user() throws -> User {
-        return try requireAuthenticated(User.self)
+    func user() -> User? {
+        return try? requireAuthenticated(User.self)
     }
 }
 

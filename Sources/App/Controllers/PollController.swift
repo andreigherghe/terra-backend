@@ -17,7 +17,18 @@ final class PollController {
             DispatchQueue.global().async {
                 do {
                     let pollMap = try polls.compactMap { poll -> PollContext? in
-                        return try PollContext(poll: poll, options: poll.options.query(on: req).all().wait())
+                        var votedID: PollAnswer.ID?
+                        if let user = req.user() {
+                            if let votes = try? poll.votes.query(on: req).filter(\PollVote.userID == user.id).filter(\PollVote.pollID == poll.id).all().wait() {
+                                if (votes.count > 2) {
+                                    throw Abort(.internalServerError)
+                                }
+                                if (votes.count == 1) {
+                                    votedID = votes[0].optionID
+                                }
+                            }
+                        }
+                        return try PollContext(poll: poll, options: poll.options.query(on: req).all().wait(), votedID: votedID)
                     }
                     promise.succeed(result: pollMap)
                 }
@@ -80,7 +91,7 @@ final class PollController {
     func createComment(_ req: Request) throws -> Future<HTTPResponse> {
         return try req.parameters.next(Poll.self).flatMap { poll in
             return try req.content.decode(PollComment.self).flatMap { comment in
-                guard let userID = try req.user().id else {
+                guard let userID = req.user()?.id else {
                     throw(Abort.init(.badRequest))
                 }
                 comment.userID = userID
@@ -101,7 +112,7 @@ final class PollController {
     func votePoll(_ req: Request) throws -> Future<HTTPResponse> {
         return try req.parameters.next(Poll.self).flatMap { poll in
             return try req.parameters.next(PollAnswer.self).flatMap { option in
-                guard let userID = try req.user().id else {
+                guard let userID = req.user()?.id else {
                     throw(Abort.init(.badRequest))
                 }
                 guard let pollID = poll.id else {
@@ -136,4 +147,5 @@ final class PollController {
 struct PollContext: Content {
     let poll: Poll
     let options: [PollAnswer]
+    let votedID: PollAnswer.ID?
 }
