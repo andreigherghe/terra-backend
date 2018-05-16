@@ -9,7 +9,14 @@ import FluentSQLite
 import Vapor
 
 /// A single entry of a PollComment list.
-final class PollComment: SQLiteModel {
+final class PollComment: SQLiteModel, Timestampable {
+
+    var createdAt: Date?
+    var updatedAt: Date?
+
+    static var createdAtKey: CreatedAtKey { return \.createdAt }
+    static var updatedAtKey: UpdatedAtKey { return \.updatedAt }
+
     /// The unique identifier for this `PollComment`.
     var id: Int?
     
@@ -17,13 +24,13 @@ final class PollComment: SQLiteModel {
     var pollID: Poll.ID?
     
     /// The unique identifier for the parent `User`
-    var userID: User.ID
+    var userID: User.ID?
     
     /// The body of the `PollComment`.
     var body: String
     
     /// Creates a new `PollComment`.
-    init(id: Int? = nil, body: String, pollID: Poll.ID, userID: User.ID) {
+    init(id: Int? = nil, body: String, pollID: Poll.ID, userID: User.ID?) {
         self.id = id
         self.body = body
         self.pollID = pollID
@@ -47,6 +54,15 @@ extension PollComment {
 //    }
 
     var user: Parent<PollComment, User> {
-        return parent(\.userID)
+        return parent(\.userID)!
+        // TODO: do not force unwrap
+    }
+}
+
+extension PollComment: Validatable {
+    static func validations() throws -> Validations<PollComment> {
+        var validations = Validations(PollComment.self)
+        try validations.add(\.body, .count (1...144))
+        return validations
     }
 }

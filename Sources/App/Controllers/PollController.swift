@@ -88,22 +88,43 @@ final class PollController {
     //MARK: Comments
     
     /// Adds a `PollComment` to a `Poll`
-    func createComment(_ req: Request) throws -> Future<HTTPResponse> {
+    func createComment(_ req: Request) throws -> Future<PollComment> {
         return try req.parameters.next(Poll.self).flatMap { poll in
             return try req.content.decode(PollComment.self).flatMap { comment in
                 guard let userID = req.user()?.id else {
                     throw(Abort.init(.badRequest))
                 }
                 comment.userID = userID
-                return poll.comments.attach(on: req, [comment], parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
+                try comment.validate()
+                return poll.comments.attach(on: req, [comment], parentIdKeyPath: \.pollID).flatMap { savedCommentArray in
+                    guard let savedComment = savedCommentArray.first else {
+                        throw(Abort(.badRequest))
+                    }
+                    return Future.map(on: req) { savedComment }
+                }
             }
         }
     }
     
     /// Gets all `PollComment`s from a `Poll`
-    func indexComment(_ req: Request) throws -> Future<[PollComment]> {
+    func indexComment(_ req: Request) throws -> Future<[PollCommentContext]> {
         return try req.parameters.next(Poll.self).flatMap { poll in
-            return try poll.comments.query(on: req).all()
+             try poll.comments.query(on: req).all().flatMap { comments in
+                let promise = req.eventLoop.newPromise([PollCommentContext].self)
+                DispatchQueue.global().async {
+                    do {
+                        let commentContexts = try comments.compactMap { comment -> PollCommentContext in
+                            let author = try comment.user.get(on: req).wait()
+                            return PollCommentContext(comment: comment, author: author.email)
+                        }
+                        promise.succeed(result: commentContexts)
+                    }
+                    catch {
+                        promise.fail(error: error)
+                    }
+                }
+                return promise.futureResult
+            }
         }
     }
 
@@ -148,4 +169,9 @@ struct PollContext: Content {
     let poll: Poll
     let options: [PollAnswer]
     let votedID: PollAnswer.ID?
+}
+
+struct PollCommentContext: Content {
+    let comment: PollComment
+    let author: String
 }
