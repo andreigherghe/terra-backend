@@ -13,7 +13,7 @@ public func routes(_ router: Router) throws {
 
     let optionalTokenMiddleware = User.nonThrowingTokenAuthMiddleware(database: .sqlite)
     let optionalTokenAuthedGroup = router.grouped(optionalTokenMiddleware)
-    
+
     // Configure Poll Controller
     let pollController = PollController()
     optionalTokenAuthedGroup.get("polls", use: pollController.index)

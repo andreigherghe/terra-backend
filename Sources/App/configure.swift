@@ -3,6 +3,30 @@ import Vapor
 import Authentication
 import Leaf
 
+let sharedTerraSocket = TerraSocket()
+
+class TerraSocket {
+    var sockets: [WebSocket] = [WebSocket]()
+
+    func add(socket: WebSocket) {
+        sockets.append(socket)
+    }
+
+    func remove(socket: WebSocket) {
+        for (index, arraySocket) in sockets.enumerated() {
+            if arraySocket === socket {
+                sockets.remove(at: index)
+            }
+        }
+    }
+
+    func broadcast(message: String) {
+        for socket in sockets {
+            socket.send(text: message)
+        }
+    }
+}
+
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     /// Register providers first
@@ -42,6 +66,26 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     /// Leaf
     try services.register(LeafProvider())
+
+    /// Websockets
+    let wss = NIOWebSocketServer.default()
+
+    // Add WebSocket upgrade support to GET /echo
+    wss.get("polls") { ws, req in
+        // Add a new on text callback
+        sharedTerraSocket.add(socket: ws)
+        ws.onText { ws, text in
+            // Simply echo any received text
+            ws.send(text)
+        }
+
+        ws.onClose.always {
+            sharedTerraSocket.remove(socket: ws)
+        }
+    }
+
+    // Register our server
+    services.register(wss, as: WebSocketServer.self)
 }
 extension Collection where Element: Model, Element.Database: QuerySupporting {
     func save(on conn: DatabaseConnectable) -> Future<[Element]> {
