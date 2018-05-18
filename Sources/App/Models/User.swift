@@ -5,7 +5,7 @@
 //  Created by Andrei GHERGHE on 05/05/2018.
 //
 
-import FluentPostgreSQL
+import FluentMySQL
 import Vapor
 import Authentication
 
@@ -18,7 +18,7 @@ public enum Authorization: Int, Codable {
     case owner
 }
 
-final class User: PostgreSQLModel {
+final class User: MySQLModel {
     /// The unique identifier for this `User`.
     var id: Int?
     

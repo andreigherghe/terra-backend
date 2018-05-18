@@ -5,11 +5,11 @@
 //  Created by Andrei GHERGHE on 10/05/2018.
 //
 
-import FluentPostgreSQL
+import FluentMySQL
 import Vapor
 
 /// A single entry of a PollVote list.
-final class PollVote: PostgreSQLModel {
+final class PollVote: MySQLModel {
     /// The unique identifier for this `PollVote`.
     var id: Int?
 

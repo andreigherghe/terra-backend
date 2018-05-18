@@ -6,12 +6,12 @@
 //
 // thanks @bensyverson
 
-import FluentPostgreSQL
+import FluentMySQL
 import Vapor
 import Authentication
 import Crypto
 
-final class TerraToken: PostgreSQLModel {
+final class TerraToken: MySQLModel {
     var id: Int?
     
     var token: String

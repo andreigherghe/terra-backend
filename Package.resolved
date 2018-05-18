@@ -56,12 +56,12 @@
         }
       },
       {
-        "package": "FluentPostgreSQL",
-        "repositoryURL": "https://github.com/vapor/fluent-postgresql",
+        "package": "FluentMySQL",
+        "repositoryURL": "https://github.com/vapor/fluent-mysql",
         "state": {
           "branch": null,
-          "revision": "8324bf0fc1437701f8963fb340c199c66079c90e",
-          "version": "1.0.0-rc.2.3"
+          "revision": "d8880a9325dfe76d1464436fda15894b831f1d77",
+          "version": "3.0.0-rc.2.5"
         }
       },
       {
@@ -92,12 +92,12 @@
         }
       },
       {
-        "package": "PostgreSQL",
-        "repositoryURL": "https://github.com/vapor/postgresql.git",
+        "package": "MySQL",
+        "repositoryURL": "https://github.com/vapor/mysql.git",
         "state": {
           "branch": null,
-          "revision": "4988607c3b2369248c6cfcd34274241a8632cd69",
-          "version": "1.0.0-rc.2.2.1"
+          "revision": "cda473257572c8e02706d0c65fd145765c5a414d",
+          "version": "3.0.0-rc.2.2"
         }
       },
       {

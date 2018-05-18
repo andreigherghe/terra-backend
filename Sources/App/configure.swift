@@ -1,4 +1,4 @@
-import FluentPostgreSQL
+import FluentMySQL
 import Vapor
 import Authentication
 import Leaf
@@ -30,9 +30,10 @@ class TerraSocket {
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     /// Register providers first
-    try services.register(FluentPostgreSQLProvider())
-    let psqlConfig = PostgreSQLDatabaseConfig(hostname: "10.0.1.4", port: 5432, username: "postgres", password: "126DA104-17B9-414F-A2DF-EC2C46D2CA45")
-    services.register(psqlConfig)
+    try services.register(FluentMySQLProvider())
+    let mysqlConfig = MySQLDatabaseConfig(hostname: "10.0.1.4", port: 3306, username: "username", password: "password", database: "vapor")
+
+    services.register(mysqlConfig)
 
     /// Register routes to the router
     let router = EngineRouter.default()
@@ -47,12 +48,12 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     /// Configure migrations
     var migrations = MigrationConfig()
-    migrations.add(model: Poll.self, database: .psql)
-    migrations.add(model: PollAnswer.self, database: .psql)
-    migrations.add(model: PollComment.self, database: .psql)
-    migrations.add(model: PollVote.self, database: .psql)
-    migrations.add(model: TerraToken.self, database: .psql)
-    migrations.add(model: User.self, database: .psql)
+    migrations.add(model: Poll.self, database: .mysql)
+    migrations.add(model: PollAnswer.self, database: .mysql)
+    migrations.add(model: PollComment.self, database: .mysql)
+    migrations.add(model: PollVote.self, database: .mysql)
+    migrations.add(model: TerraToken.self, database: .mysql)
+    migrations.add(model: User.self, database: .mysql)
     services.register(migrations)
     
     /// Auth
