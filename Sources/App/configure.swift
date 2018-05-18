@@ -31,7 +31,7 @@ class TerraSocket {
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     /// Register providers first
     try services.register(FluentMySQLProvider())
-    let mysqlConfig = MySQLDatabaseConfig(hostname: "10.0.1.4", port: 3306, username: "username", password: "password", database: "vapor")
+    let mysqlConfig = MySQLDatabaseConfig(hostname: "82.137.26.104", port: 3306, username: "terra", password: "AB37BC34-4517-42FD-9E6A-ECCDC8886CCF", database: "vapor")
 
     services.register(mysqlConfig)
 
