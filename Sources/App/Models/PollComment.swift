@@ -5,11 +5,11 @@
 //  Created by Andrei GHERGHE on 05/05/2018.
 //
 
-import FluentSQLite
+import FluentPostgreSQL
 import Vapor
 
 /// A single entry of a PollComment list.
-final class PollComment: SQLiteModel, Timestampable {
+final class PollComment: PostgreSQLModel, Timestampable {
 
     var createdAt: Date?
     var updatedAt: Date?

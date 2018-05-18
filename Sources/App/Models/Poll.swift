@@ -5,11 +5,11 @@
 //  Created by Andrei GHERGHE on 05/05/2018.
 //
 
-import FluentSQLite
+import FluentPostgreSQL
 import Vapor
 
 /// A single entry of a Poll list.
-final class Poll: SQLiteModel {
+final class Poll: PostgreSQLModel {
     /// The unique identifier for this `Poll`.
     var id: Int?
     

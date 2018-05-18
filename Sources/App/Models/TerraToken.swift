@@ -6,12 +6,12 @@
 //
 // thanks @bensyverson
 
-import FluentSQLite
+import FluentPostgreSQL
 import Vapor
 import Authentication
 import Crypto
 
-final class TerraToken: SQLiteModel {
+final class TerraToken: PostgreSQLModel {
     var id: Int?
     
     var token: String

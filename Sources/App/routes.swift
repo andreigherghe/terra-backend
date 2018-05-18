@@ -8,10 +8,10 @@ public func routes(_ router: Router) throws {
     let passwordMiddleware = User.basicAuthMiddleware(using: BCryptDigest())
     let passwordAuthedGroup = router.grouped(passwordMiddleware)
 
-    let tokenMiddleware = User.tokenAuthMiddleware(database: .sqlite)
+    let tokenMiddleware = User.tokenAuthMiddleware(database: .psql)
     let tokenAuthedGroup = router.grouped(tokenMiddleware)
 
-    let optionalTokenMiddleware = User.nonThrowingTokenAuthMiddleware(database: .sqlite)
+    let optionalTokenMiddleware = User.nonThrowingTokenAuthMiddleware(database: .psql)
     let optionalTokenAuthedGroup = router.grouped(optionalTokenMiddleware)
 
     // Configure Poll Controller

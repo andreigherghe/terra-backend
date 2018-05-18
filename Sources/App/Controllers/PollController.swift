@@ -66,11 +66,11 @@ final class PollController {
                 try child.validate()
             }
             return savedPoll.options.attach(on: req, children, parentIdKeyPath: \.pollID).map(to: Response.self) { savedPollOptions in
-                let pollContext = PollContext(poll: savedPoll, options: savedPollOptions, votedID: nil)
-                let pollJson = try JSONEncoder().encode(pollContext)
-                if let pollString = String(data: pollJson, encoding: .utf8) {
-                    sharedTerraSocket.broadcast(message: pollString)
-                }
+//                let pollContext = PollContext(poll: savedPoll, options: savedPollOptions, votedID: nil)
+//                let pollJson = try JSONEncoder().encode(pollContext)
+//                if let pollString = String(data: pollJson, encoding: .utf8) {
+//                    sharedTerraSocket.broadcast(message: pollString)
+//                }
                 return req.redirect(to: "/?createPollSuccess=true")
             }
         }
