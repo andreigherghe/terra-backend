@@ -9,7 +9,23 @@ import Vapor
 import Fluent
 
 /// Controlers basic CRUD operations on `Poll`s.
-final class PollController {    
+final class PollController {
+
+    func getResultsForPoll(pollID: UUID, pollOptions: [PollAnswer], req: Request) throws -> [PollResultContext]? {
+        var results = [PollResultContext]()
+
+        for option in pollOptions {
+            guard let optionID = option.id else {
+                throw Abort(.internalServerError)
+            }
+            let voteCount = try PollVote.query(on: req).filter(\PollVote.pollID == pollID).filter(\PollVote.optionID == option.id).count().wait()
+            let result = PollResultContext(pollID: pollID, optionID: optionID, votes: voteCount)
+            results.append(result)
+        }
+
+        return results.count > 0 ? results : nil
+    }
+
     func index(_ req: Request) throws -> Future<[PollContext]> {
         //TODO: refactor without promise
         return Poll.query(on: req).all().flatMap(to: [PollContext].self) { polls in
@@ -18,6 +34,9 @@ final class PollController {
                 do {
                     let pollMap = try polls.compactMap { poll -> PollContext? in
                         var votedID: PollAnswer.ID?
+                        guard let pollID = poll.id else {
+                            throw Abort(.internalServerError)
+                        }
                         if let user = req.user() {
                             if let votes = try? poll.votes.query(on: req).filter(\PollVote.userID == user.id).filter(\PollVote.pollID == poll.id).all().wait() {
                                 if (votes.count > 2) {
@@ -26,9 +45,12 @@ final class PollController {
                                 if (votes.count == 1) {
                                     votedID = votes[0].optionID
                                 }
+
                             }
                         }
-                        return try PollContext(poll: poll, options: poll.options.query(on: req).all().wait(), votedID: votedID)
+                        let pollOptions = try poll.options.query(on: req).all().wait()
+                        let results = try self.getResultsForPoll(pollID: pollID, pollOptions: pollOptions, req: req)
+                        return PollContext(poll: poll, options: pollOptions, votedID: votedID, results: results)
                     }
                     promise.succeed(result: pollMap)
                 }
@@ -66,7 +88,7 @@ final class PollController {
                 try child.validate()
             }
             return savedPoll.options.attach(on: req, children, parentIdKeyPath: \.pollID).map(to: Response.self) { savedPollOptions in
-                let pollContext = PollContext(poll: savedPoll, options: savedPollOptions, votedID: nil)
+                let pollContext = PollContext(poll: savedPoll, options: savedPollOptions, votedID: nil, results: nil)
                 let pollJson = try JSONEncoder().encode(pollContext)
                 if let pollString = String(data: pollJson, encoding: .utf8) {
                     sharedTerraSocket.broadcast(message: pollString)
@@ -170,10 +192,17 @@ final class PollController {
     }
 }
 
+struct PollResultContext: Content {
+    let pollID: Poll.ID
+    let optionID: PollAnswer.ID
+    let votes: Int
+}
+
 struct PollContext: Content {
     let poll: Poll
     let options: [PollAnswer]
     let votedID: PollAnswer.ID?
+    let results: [PollResultContext]?
 }
 
 struct PollCommentContext: Content {
