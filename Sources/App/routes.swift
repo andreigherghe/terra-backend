@@ -23,6 +23,8 @@ public func routes(_ router: Router) throws {
     // Poll Comments
     tokenAuthedGroup.get("polls", Poll.parameter, "comments", use: pollController.indexComment)
     tokenAuthedGroup.post("polls", Poll.parameter, "comments", use: pollController.createComment)
+
+    // Poll Votes
     tokenAuthedGroup.post("polls", Poll.parameter, "vote", PollAnswer.parameter, use: pollController.votePoll)
 
     // Configure User Controller

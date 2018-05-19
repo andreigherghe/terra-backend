@@ -3,7 +3,8 @@ import Vapor
 import Authentication
 import Leaf
 
-let sharedTerraSocket = TerraSocket()
+let pollTerraSocket = TerraSocket()
+let pollResultsTerraSocket = TerraSocket()
 
 class TerraSocket {
     var sockets: [WebSocket] = [WebSocket]()
@@ -68,10 +69,19 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     // Add WebSocket upgrade support to GET /echo
     wss.get("polls") { ws, req in
         // Add a new on text callback
-        sharedTerraSocket.add(socket: ws)
+        pollTerraSocket.add(socket: ws)
 
         ws.onClose.always {
-            sharedTerraSocket.remove(socket: ws)
+            pollTerraSocket.remove(socket: ws)
+        }
+    }
+
+    wss.get("pollresults") { ws, req in
+        // Add a new on text callback
+        pollResultsTerraSocket.add(socket: ws)
+
+        ws.onClose.always {
+            pollResultsTerraSocket.remove(socket: ws)
         }
     }
 

@@ -91,7 +91,10 @@ final class PollController {
                 let pollContext = PollContext(poll: savedPoll, options: savedPollOptions, votedID: nil, results: nil)
                 let pollJson = try JSONEncoder().encode(pollContext)
                 if let pollString = String(data: pollJson, encoding: .utf8) {
-                    sharedTerraSocket.broadcast(message: pollString)
+                    pollTerraSocket.broadcast(message: pollString)
+                }
+                else {
+                    //TODO: LOG THIS!
                 }
                 return req.redirect(to: "/?createPollSuccess=true")
             }
@@ -132,11 +135,11 @@ final class PollController {
             }
         }
     }
-    
+
     /// Gets all `PollComment`s from a `Poll`
     func indexComment(_ req: Request) throws -> Future<[PollCommentContext]> {
         return try req.parameters.next(Poll.self).flatMap { poll in
-             try poll.comments.query(on: req).all().flatMap { comments in
+            try poll.comments.query(on: req).all().flatMap { comments in
                 let promise = req.eventLoop.newPromise([PollCommentContext].self)
                 DispatchQueue.global().async {
                     do {
@@ -184,6 +187,23 @@ final class PollController {
                         }
                         
                         let pollVote = PollVote(pollID: pollID, optionID: optionID, userID: userID)
+                        DispatchQueue.global().async {
+                            do {
+                                let pollOptions = try poll.options.query(on: req).all().wait()
+                                let results = try self.getResultsForPoll(pollID: pollID, pollOptions: pollOptions, req: req)
+
+                                let resultsJson = try JSONEncoder().encode(results)
+                                if let resultsString = String(data: resultsJson, encoding: .utf8) {
+                                    pollResultsTerraSocket.broadcast(message: resultsString)
+                                }
+                                else {
+                                    //TODO: LOG THIS!
+                                }
+                            }
+                            catch {
+                                //TODO: LOG THIS!
+                            }
+                        }
                         return poll.votes.attach(on: req, [pollVote], parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
                     }
                 }
