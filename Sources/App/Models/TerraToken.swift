@@ -11,13 +11,13 @@ import Vapor
 import Authentication
 import Crypto
 
-final class TerraToken: MySQLModel {
-    var id: Int?
+final class TerraToken: MySQLUUIDModel {
+    var id: UUID?
     
     var token: String
-    var userID: Int
+    var userID: UUID
     
-    init(id: Int? = nil, string: String, user: User) throws {
+    init(id: UUID? = nil, string: String, user: User) throws {
         self.id = id
         self.token = string
         guard let loggedUserId = user.id else {
@@ -38,7 +38,7 @@ extension TerraToken: Content { }
 extension TerraToken: Parameter { }
 
 extension TerraToken: Token {
-    static var userIDKey: WritableKeyPath<TerraToken, Int> {
+    static var userIDKey: WritableKeyPath<TerraToken, UUID> {
         return \TerraToken.userID
     }
     

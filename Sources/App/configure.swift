@@ -86,11 +86,11 @@ extension Collection where Element: Model, Element.Database: QuerySupporting {
 
 // thanks @twof
 extension Children where Parent: Model, Parent.Database: QuerySupporting {
-    func attach(on conn: DatabaseConnectable, _ children: [Child], parentIdKeyPath: ReferenceWritableKeyPath<Child, Int?>) -> Future<[Child]> {
+    func attach(on conn: DatabaseConnectable, _ children: [Child], parentIdKeyPath: ReferenceWritableKeyPath<Child, UUID?>) -> Future<[Child]> {
         return self.parent.save(on: conn).flatMap(to: [Child].self) { (savedParent) in
             let parentId = savedParent.fluentID
             let newChildren = children.map { child -> Child in
-                guard let parentId = parentId as? Int else { fatalError() }
+                guard let parentId = parentId as? UUID else { fatalError() }
                 let newChild = child
                 newChild[keyPath: parentIdKeyPath] = parentId
                 return newChild

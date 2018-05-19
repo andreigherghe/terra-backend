@@ -9,9 +9,9 @@ import FluentMySQL
 import Vapor
 
 /// A single entry of a Poll list.
-final class Poll: MySQLModel {
+final class Poll: MySQLUUIDModel {
     /// The unique identifier for this `Poll`.
-    var id: Int?
+    var id: UUID?
     
     /// `Poll` question.
     var question: String
@@ -32,7 +32,7 @@ final class Poll: MySQLModel {
     var disableComments: Int?
     
     /// Creates a new `Poll`.
-    init?(id: Int? = nil,
+    init?(id: UUID? = nil,
          question: String,
          startDate: Double?,
          endDate: Double,

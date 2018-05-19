@@ -18,9 +18,9 @@ public enum Authorization: Int, Codable {
     case owner
 }
 
-final class User: MySQLModel {
+final class User: MySQLUUIDModel {
     /// The unique identifier for this `User`.
-    var id: Int?
+    var id: UUID?
     
     /// The email for this `User`.
     var email: String
@@ -44,7 +44,7 @@ final class User: MySQLModel {
 //    var authorization: Authorization?
 
     /// Creates a new `User`.
-    init(id: Int? = nil,
+    init(id: UUID? = nil,
          email: String,
          username: String?,
          age: Int?,

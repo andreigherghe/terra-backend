@@ -2,15 +2,15 @@ import FluentMySQL
 import Vapor
 
 /// A single entry of a Todo list.
-final class Todo: MySQLModel {
+final class Todo: MySQLUUIDModel {
     /// The unique identifier for this `Todo`.
-    var id: Int?
+    var id: UUID?
 
     /// A title describing what this `Todo` entails.
     var title: String
 
     /// Creates a new `Todo`.
-    init(id: Int? = nil, title: String) {
+    init(id: UUID? = nil, title: String) {
         self.id = id
         self.title = title
     }

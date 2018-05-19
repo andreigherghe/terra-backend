@@ -9,9 +9,9 @@ import FluentMySQL
 import Vapor
 
 /// A single entry of a PollVote list.
-final class PollVote: MySQLModel {
+final class PollVote: MySQLUUIDModel {
     /// The unique identifier for this `PollVote`.
-    var id: Int?
+    var id: UUID?
 
     /// A title describing what this `PollVote` entails.
     var pollID: Poll.ID?
@@ -21,7 +21,7 @@ final class PollVote: MySQLModel {
     var userID: User.ID
 
     /// Creates a new `PollVote`.
-    init(id: Int? = nil,
+    init(id: UUID? = nil,
          pollID: Poll.ID?,
          optionID: PollAnswer.ID,
          userID: User.ID

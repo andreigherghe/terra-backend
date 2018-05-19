@@ -9,7 +9,7 @@ import FluentMySQL
 import Vapor
 
 /// A single entry of a PollComment list.
-final class PollComment: MySQLModel, Timestampable {
+final class PollComment: MySQLUUIDModel, Timestampable {
 
     var createdAt: Date?
     var updatedAt: Date?
@@ -18,7 +18,7 @@ final class PollComment: MySQLModel, Timestampable {
     static var updatedAtKey: UpdatedAtKey { return \.updatedAt }
 
     /// The unique identifier for this `PollComment`.
-    var id: Int?
+    var id: UUID?
     
     /// The unique identifier for the parent `Poll`
     var pollID: Poll.ID?
@@ -30,7 +30,7 @@ final class PollComment: MySQLModel, Timestampable {
     var body: String
     
     /// Creates a new `PollComment`.
-    init(id: Int? = nil, body: String, pollID: Poll.ID, userID: User.ID?) {
+    init(id: UUID? = nil, body: String, pollID: Poll.ID, userID: User.ID?) {
         self.id = id
         self.body = body
         self.pollID = pollID
