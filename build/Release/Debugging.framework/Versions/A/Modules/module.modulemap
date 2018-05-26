@@ -1,4 +1,0 @@
-framework module Debugging {
-    header "Debugging-Swift.h"
-    requires objc
-}

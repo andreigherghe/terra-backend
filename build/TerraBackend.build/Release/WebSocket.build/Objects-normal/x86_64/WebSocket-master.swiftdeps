@@ -1,9 +1,0 @@
-version: "Apple Swift version 4.1.1 (swiftlang-902.0.50 clang-902.0.37.1)"
-options: "93e3f87ee59726e3388d9d524d15cece"
-build_time: [1525527870, 565030000]
-inputs:
-  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/websocket.git-995660844808513665/Sources/WebSocket/Exports.swift": [9223372036, 854775807]
-  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/websocket.git-995660844808513665/Sources/WebSocket/WebSocket+Client.swift": [9223372036, 854775807]
-  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/websocket.git-995660844808513665/Sources/WebSocket/WebSocket+Server.swift": [9223372036, 854775807]
-  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/websocket.git-995660844808513665/Sources/WebSocket/WebSocket.swift": [9223372036, 854775807]
-  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/websocket.git-995660844808513665/Sources/WebSocket/WebSocketHandler.swift": [9223372036, 854775807]

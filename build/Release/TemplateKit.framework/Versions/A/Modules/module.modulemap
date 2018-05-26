@@ -1,4 +1,0 @@
-framework module TemplateKit {
-    header "TemplateKit-Swift.h"
-    requires objc
-}

@@ -1,4 +1,0 @@
-framework module Vapor {
-    header "Vapor-Swift.h"
-    requires objc
-}

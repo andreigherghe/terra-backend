@@ -1,4 +1,0 @@
-framework module Random {
-    header "Random-Swift.h"
-    requires objc
-}

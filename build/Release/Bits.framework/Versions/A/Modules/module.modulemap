@@ -1,4 +1,0 @@
-framework module Bits {
-    header "Bits-Swift.h"
-    requires objc
-}

@@ -1,4 +1,0 @@
-framework module SQL {
-    header "SQL-Swift.h"
-    requires objc
-}

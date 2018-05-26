@@ -1,4 +1,0 @@
-framework module Crypto {
-    header "Crypto-Swift.h"
-    requires objc
-}

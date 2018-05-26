@@ -1,4 +1,0 @@
-framework module NIOFoundationCompat {
-    header "NIOFoundationCompat-Swift.h"
-    requires objc
-}

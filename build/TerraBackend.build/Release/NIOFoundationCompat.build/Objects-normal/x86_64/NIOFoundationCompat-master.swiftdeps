@@ -1,5 +1,0 @@
-version: "Apple Swift version 4.1.1 (swiftlang-902.0.50 clang-902.0.37.1)"
-options: "718a3b817e694f26808088cb36a6ba32"
-build_time: [1525527818, 101341000]
-inputs:
-  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/swift-nio.git-3108475404973543938/Sources/NIOFoundationCompat/ByteBuffer-foundation.swift": [9223372036, 854775807]

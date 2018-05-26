@@ -1,7 +1,0 @@
-version: "Apple Swift version 4.1.1 (swiftlang-902.0.50 clang-902.0.37.1)"
-options: "7e8402849394b3686687d2d8a510942e"
-build_time: [1525527821, 820573000]
-inputs:
-  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Debugging/Debuggable.swift": [9223372036, 854775807]
-  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Debugging/Demangler.swift": [9223372036, 854775807]
-  "/Users/andreigherghe/Business/Terra/app/backend/TerraBackend/.build/checkouts/core.git-9210800844849382486/Sources/Debugging/SourceLocation.swift": [9223372036, 854775807]
