@@ -104,11 +104,13 @@ final class PollController {
     /// Deletes a parameterized `Poll`.
     func delete(_ req: Request) throws -> Future<Response> {
         return try req.parameters.next(Poll.self).flatMap { poll -> Future<Response> in
-            let deletePoll = poll.delete(on: req)
-            let deleteOptions = try poll.options.query(on: req).delete()
+
             let deleteComments = try poll.comments.query(on: req).delete()
             let deleteVotes = try poll.votes.query(on: req).delete()
-            return flatMap(to: Response.self, deleteComments, deleteOptions, deleteVotes, deletePoll) {
+            let deleteOptions = try poll.options.query(on: req).delete()
+            let deletePoll = poll.delete(on: req)
+
+            return flatMap(to: Response.self, deleteComments, deleteVotes, deleteOptions, deletePoll) {
                 (_, _, _, _) in
                 return Future.map(on: req) {req.redirect(to: "/")}
             }
