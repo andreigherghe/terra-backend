@@ -103,6 +103,7 @@ final class PollController {
                 }
                 else {
                     //TODO: LOG THIS!
+                    print("🔥 BROADCAST POLL FAIL")
                 }
                 return req.redirect(to: "/?createPollSuccess=true")
             }
@@ -200,17 +201,19 @@ final class PollController {
                         DispatchQueue.global().async {
                             do {
                                 let pollOptions = try poll.options.query(on: req).all().wait()
-                                let results = try self.getResultsForPoll(pollID: pollID, pollOptions: pollOptions, req: req)
+                                let results = try self.getResultsForPoll(pollID: pollID, pollOptions: pollOptions, req: req)?.wait()
 
                                 let resultsJson = try JSONEncoder().encode(results)
                                 if let resultsString = String(data: resultsJson, encoding: .utf8) {
                                     pollResultsTerraSocket.broadcast(message: resultsString)
                                 }
                                 else {
+                                    print("🔥 ENCODE BROADCAST VOTE FAIL")
                                     //TODO: LOG THIS!
                                 }
                             }
                             catch {
+                                print("🔥 BROADCAST VOTE FAIL")
                                 //TODO: LOG THIS!
                             }
                         }
