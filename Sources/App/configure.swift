@@ -7,24 +7,31 @@ let pollTerraSocket = TerraSocket()
 let pollResultsTerraSocket = TerraSocket()
 
 class TerraSocket {
+    let sema = DispatchSemaphore(value: 1)
     var sockets: [WebSocket] = [WebSocket]()
 
     func add(socket: WebSocket) {
+        sema.wait()
         sockets.append(socket)
+        sema.signal()
     }
 
     func remove(socket: WebSocket) {
+        sema.wait()
         for (index, arraySocket) in sockets.enumerated() {
             if arraySocket === socket {
                 sockets.remove(at: index)
             }
         }
+        sema.signal()
     }
 
     func broadcast(message: String) {
+        sema.wait()
         for socket in sockets {
             socket.send(text: message)
         }
+        sema.signal()
     }
 }
 
