@@ -11,19 +11,27 @@ import Fluent
 /// Controlers basic CRUD operations on `Poll`s.
 final class PollController {
 
-    func getResultsForPoll(pollID: UUID, pollOptions: [PollAnswer], req: Request) throws -> [PollResultContext]? {
+    func getResultsForPoll(pollID: UUID, pollOptions: [PollAnswer], req: Request) throws -> Future<[PollResultContext]>? {
+        let promise = req.eventLoop.newPromise([PollResultContext].self)
         var results = [PollResultContext]()
+        var fetchedOptions = 0
 
         for option in pollOptions {
             guard let optionID = option.id else {
+                promise.fail(error: Abort(.internalServerError))
                 throw Abort(.internalServerError)
             }
-            let voteCount = try PollVote.query(on: req).filter(\PollVote.pollID == pollID).filter(\PollVote.optionID == option.id).count().wait()
-            let result = PollResultContext(pollID: pollID, optionID: optionID, votes: voteCount)
-            results.append(result)
+            _ = try PollVote.query(on: req).filter(\PollVote.pollID == pollID).filter(\PollVote.optionID == option.id).count().do { voteCount in
+                let result = PollResultContext(pollID: pollID, optionID: optionID, votes: voteCount)
+                results.append(result)
+                fetchedOptions += 1
+                if (fetchedOptions == pollOptions.count) {
+                    promise.succeed(result: results)
+                }
+            }
         }
 
-        return results.count > 0 ? results : nil
+        return promise.futureResult
     }
 
     func index(_ req: Request) throws -> Future<[PollContext]> {
@@ -49,7 +57,7 @@ final class PollController {
                             }
                         }
                         let pollOptions = try poll.options.query(on: req).all().wait()
-                        let results = try self.getResultsForPoll(pollID: pollID, pollOptions: pollOptions, req: req)
+                        let results = try self.getResultsForPoll(pollID: pollID, pollOptions: pollOptions, req: req)?.wait()
                         return PollContext(poll: poll, options: pollOptions, votedID: votedID, results: results)
                     }
                     promise.succeed(result: pollMap)
@@ -77,7 +85,7 @@ final class PollController {
                 }
             }
         }
-        
+
         return flatMap(to: Response.self, poll, answers) { (savedPoll, children) in
             //TODO: use parameters instead of hardcoded urls
             if (children.count < 2){
