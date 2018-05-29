@@ -26,10 +26,10 @@ final class Poll: MySQLUUIDModel {
     var showResultsDate: Double?
     
     // If the results are to be displayed immediately after voting in the `Poll`.
-    var showResultsImmediately: Int?
+    var showResultsImmediately: Bool?
     
     // If comments are allowed in the `Poll`.
-    var disableComments: Int?
+    var disableComments: Bool?
     
     /// Creates a new `Poll`.
     init?(id: UUID? = nil,
@@ -37,8 +37,8 @@ final class Poll: MySQLUUIDModel {
          startDate: Double?,
          endDate: Double,
          showResultsDate: Double?,
-         showResultsImmediately: Int?,
-         disableComments: Int?) {
+         showResultsImmediately: Bool?,
+         disableComments: Bool?) {
         
         self.id = id
         self.question = question
@@ -75,6 +75,7 @@ extension Poll {
 
 extension Poll: Validatable {
     static func validations() throws -> Validations<Poll> {
+        //TODO: TIMESTAMP VALIDATION
         var validations = Validations(Poll.self)
         try validations.add(\.question, .count (5...144))
         return validations

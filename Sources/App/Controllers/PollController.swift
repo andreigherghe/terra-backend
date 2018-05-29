@@ -89,6 +89,7 @@ final class PollController {
         return flatMap(to: Response.self, poll, answers) { (savedPoll, children) in
             //TODO: use parameters instead of hardcoded urls
             if (children.count < 2){
+                //TODO: THROW ERROR!!!
                 return Future.map(on: req) {req.redirect(to: "/?createPollSuccess=false")}
             }
             try savedPoll.validate()
@@ -131,6 +132,9 @@ final class PollController {
     /// Adds a `PollComment` to a `Poll`
     func createComment(_ req: Request) throws -> Future<PollComment> {
         return try req.parameters.next(Poll.self).flatMap { poll in
+            if (poll.disableComments == true) {
+                throw(Abort(.locked))
+            }
             return try req.content.decode(PollComment.self).flatMap { comment in
                 guard let userID = req.user()?.id else {
                     throw(Abort.init(.badRequest))
@@ -182,6 +186,10 @@ final class PollController {
                 }
                 guard let optionID = option.id else {
                     throw(Abort.init(.badRequest))
+                }
+
+                if (poll.endDate <= Date().timeIntervalSince1970) {
+                    throw(Abort(.locked))
                 }
 
                 return try poll.options.query(on: req).filter(\PollAnswer.id == optionID).count().flatMap { answerCount -> Future<HTTPResponse> in
