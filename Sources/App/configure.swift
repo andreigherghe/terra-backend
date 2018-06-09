@@ -39,9 +39,13 @@ class TerraSocket {
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
     /// Register providers first
     try services.register(FluentMySQLProvider())
-    let mysqlConfig = MySQLDatabaseConfig(hostname: "82.137.26.104", port: 3306, username: "terra", password: "AB37BC34-4517-42FD-9E6A-ECCDC8886CCF", database: "vapor")
-//    let mysqlConfig = MySQLDatabaseConfig(hostname: "localhost", port: 3306, username: "vapor", password: "test", database: "vapor")
 
+    guard let mySqlUrl = ProcessInfo.processInfo.environment["DB_MYSQL"] else {
+        throw Abort(.internalServerError)
+    }
+    let regex = "://(.+):(.+)@(.+):(.+)/(.+)"
+    let dbComponents = mySqlUrl.capturedGroups(withRegex: regex)
+    let mysqlConfig = MySQLDatabaseConfig(hostname: dbComponents[2], port: Int(dbComponents[3])!, username: dbComponents[0], password: dbComponents[1], database: dbComponents[4])
     services.register(mysqlConfig)
 
     /// Register routes to the router
@@ -115,5 +119,33 @@ extension Children where Parent: Model, Parent.Database: QuerySupporting {
             }
             return newChildren.save(on: conn)
         }
+    }
+}
+
+extension String {
+    func capturedGroups(withRegex pattern: String) -> [String] {
+        var results = [String]()
+
+        var regex: NSRegularExpression
+        do {
+            regex = try NSRegularExpression(pattern: pattern, options: [])
+        } catch {
+            return results
+        }
+
+        let matches = regex.matches(in: self, options: [], range: NSRange(location:0, length: self.characters.count))
+
+        guard let match = matches.first else { return results }
+
+        let lastRangeIndex = match.numberOfRanges - 1
+        guard lastRangeIndex >= 1 else { return results }
+
+        for i in 1...lastRangeIndex {
+            let capturedGroupIndex = match.range(at: i)
+            let matchedString = (self as NSString).substring(with: capturedGroupIndex)
+            results.append(matchedString)
+        }
+
+        return results
     }
 }
