@@ -30,15 +30,18 @@ final class User: MySQLUUIDModel {
     
     /// The age for this `User`.
     var age: Int?
-    
-    /// The phone for this `User`.
-    var phone: String?
-    
+
     /// The bonus points for this `User`.
     var points: Int? = 0
     
     /// The hashed password for this `User`.
     var password: String
+
+    /// The city for this `User`.
+    var city: String?
+
+    /// The gender for this `User`.
+    var gender: Int?
 
     /// Auth level for the `User`
 //    var authorization: Authorization?
@@ -48,17 +51,19 @@ final class User: MySQLUUIDModel {
          email: String?,
          username: String,
          age: Int?,
-         phone: String?,
-         password: String
+         password: String,
+         gender: Int?,
+         city: String?
 //         authorization: Authorization?
         ) {
         self.id = id
         self.email = email
         self.username = username
         self.age = age
-        self.phone = phone
         self.points = 0
         self.password = password
+        self.gender = gender
+        self.city = city
 //        self.authorization = authorization
     }
 
@@ -71,8 +76,12 @@ final class User: MySQLUUIDModel {
 }
 
 struct UserProfileResponse: Content {
-    let username: String
+    let username: String?
+    let email: String?
     let points: Int?
+    let gender: Int?
+    let city: String?
+    let age: Int?
 }
 
 struct LoggedUserResponse: Content {

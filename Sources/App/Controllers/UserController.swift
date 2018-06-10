@@ -46,7 +46,7 @@ final class UserController {
             throw Abort(.unauthorized)
         }
         return Future.map(on: req) {
-            return UserProfileResponse(username: user.username, points: user.points)
+            return UserProfileResponse(username: user.username, email: user.email, points: user.points, gender: user.gender, city: user.city, age: user.age)
         }
     }
     
@@ -55,5 +55,24 @@ final class UserController {
         return try req.parameters.next(User.self).flatMap { todo in
             return todo.delete(on: req)
             }.transform(to: .ok)
+    }
+
+    /// Updates a parameterized `User`.
+    func update(_ req: Request) throws -> Future<UserProfileResponse> {
+        guard let authedUser = req.user() else {
+            throw Abort(.unauthorized)
+        }
+        return try req.content.decode(UserProfileResponse.self).flatMap { user in
+            authedUser.age = user.age
+            authedUser.city = user.city
+            authedUser.email = user.email
+            authedUser.gender = user.gender
+
+            return authedUser.update(on: req).flatMap { updatedUser in
+                return Future.map(on: req) {
+                    return UserProfileResponse(username: user.username, email: user.email, points: user.points, gender: user.gender, city: user.city, age: user.age)
+                }
+            }
+        }
     }
 }

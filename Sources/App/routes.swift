@@ -31,6 +31,7 @@ public func routes(_ router: Router) throws {
     let userController = UserController()
     passwordAuthedGroup.post("login", use: userController.login)
     tokenAuthedGroup.get("self", use: userController.getSelf)
+    tokenAuthedGroup.post("self", use: userController.update)
     router.post("signup", use: userController.signup)
 
     // Leaf
