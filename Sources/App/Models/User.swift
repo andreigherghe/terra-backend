@@ -23,10 +23,10 @@ final class User: MySQLUUIDModel {
     var id: UUID?
     
     /// The email for this `User`.
-    var email: String
+    var email: String?
     
     /// The username for this `User`.
-    var username: String?
+    var username: String
     
     /// The age for this `User`.
     var age: Int?
@@ -35,7 +35,7 @@ final class User: MySQLUUIDModel {
     var phone: String?
     
     /// The bonus points for this `User`.
-    var points: Int?
+    var points: Int? = 0
     
     /// The hashed password for this `User`.
     var password: String
@@ -45,8 +45,8 @@ final class User: MySQLUUIDModel {
 
     /// Creates a new `User`.
     init(id: UUID? = nil,
-         email: String,
-         username: String?,
+         email: String?,
+         username: String,
          age: Int?,
          phone: String?,
          password: String
@@ -61,11 +61,23 @@ final class User: MySQLUUIDModel {
         self.password = password
 //        self.authorization = authorization
     }
+
+    func awardPoints() {
+        if self.points == nil {
+            self.points = 0
+        }
+        self.points = self.points! + 1
+    }
+}
+
+struct UserProfileResponse: Content {
+    let username: String
+    let points: Int?
 }
 
 struct LoggedUserResponse: Content {
     let username: String
-    let token: String?
+    let token: String
 }
 
 /// Allows `User` to be used as a dynamic migration.
@@ -88,6 +100,6 @@ extension User {
 extension User: TokenAuthenticatable, BasicAuthenticatable {
     public typealias TokenType = TerraToken
     
-    public static var usernameKey : WritableKeyPath<User, String> = \User.email
+    public static var usernameKey : WritableKeyPath<User, String> = \User.username
     public static var passwordKey : WritableKeyPath<User, String> = \User.password
 }

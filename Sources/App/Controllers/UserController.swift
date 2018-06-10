@@ -35,18 +35,18 @@ final class UserController {
         let token = try TerraToken.generate(for: user)
         return token.save(on: req).flatMap { savedToken -> Future<LoggedUserResponse> in
             return Future.map(on: req) {
-                return LoggedUserResponse(username: user.email, token: savedToken.token)
+                return LoggedUserResponse(username: user.username, token: savedToken.token)
             }
         }
     }
 
     /// Deletes a parameterized `User`.
-    func getSelf(_ req: Request) throws -> Future<LoggedUserResponse> {
+    func getSelf(_ req: Request) throws -> Future<UserProfileResponse> {
         guard let user = req.user() else {
             throw Abort(.unauthorized)
         }
         return Future.map(on: req) {
-            return LoggedUserResponse(username: user.email, token: nil)
+            return UserProfileResponse(username: user.username, points: user.points)
         }
     }
     

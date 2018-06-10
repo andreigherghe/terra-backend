@@ -160,7 +160,7 @@ final class PollController {
                     do {
                         let commentContexts = try comments.compactMap { comment -> PollCommentContext in
                             let author = try comment.user.get(on: req).wait()
-                            return PollCommentContext(comment: comment, author: author.email)
+                            return PollCommentContext(comment: comment, author: author.username)
                         }
                         promise.succeed(result: commentContexts)
                     }
@@ -178,7 +178,10 @@ final class PollController {
     func votePoll(_ req: Request) throws -> Future<HTTPResponse> {
         return try req.parameters.next(Poll.self).flatMap { poll in
             return try req.parameters.next(PollAnswer.self).flatMap { option in
-                guard let userID = req.user()?.id else {
+                guard let user = req.user() else {
+                    throw(Abort.init(.badRequest))
+                }
+                guard let userID = user.id else {
                     throw(Abort.init(.badRequest))
                 }
                 guard let pollID = poll.id else {
@@ -225,7 +228,14 @@ final class PollController {
                                 //TODO: LOG THIS!
                             }
                         }
-                        return poll.votes.attach(on: req, [pollVote], parentIdKeyPath: \.pollID).transform(to: HTTPResponse(status: .created))
+                        let attachVote = poll.votes.attach(on: req, [pollVote], parentIdKeyPath: \.pollID)
+
+                        user.awardPoints()
+                        let awardPointsFuture = user.update(on: req)
+
+                        return flatMap(to: HTTPResponse.self, attachVote, awardPointsFuture) { (_, _) in
+                            return Future.map(on: req) { HTTPResponse(status: .created) }
+                        }
                     }
                 }
             }
