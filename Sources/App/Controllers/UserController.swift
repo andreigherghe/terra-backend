@@ -16,7 +16,7 @@ final class UserController {
     /// Saves a decoded `User` to the database.
     func signup(_ req: Request) throws -> Future<HTTPResponse> {
         return try req.content.decode(User.self).flatMap { user in
-            try User.query(on: req).filter(\User.email == user.email).count().flatMap { userCount in
+            try User.query(on: req).filter(\User.username == user.username).count().flatMap { userCount in
                 if userCount > 0 {
                     throw Abort(.conflict)
                 }
@@ -65,6 +65,7 @@ final class UserController {
         return try req.content.decode(UserProfileResponse.self).flatMap { user in
             authedUser.age = user.age
             authedUser.city = user.city
+            //TODO: CHECK FOR DUPLICATES, ADD VERIFICATION
             authedUser.email = user.email
             authedUser.gender = user.gender
 
